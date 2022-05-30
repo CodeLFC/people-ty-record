@@ -1,15 +1,19 @@
 package gaozhi.online.peoplety.record.controller;
+
 import gaozhi.online.base.interceptor.HeaderChecker;
 import gaozhi.online.peoplety.record.entity.Area;
+import gaozhi.online.peoplety.record.entity.IPInfo;
 import gaozhi.online.peoplety.record.entity.RecordType;
 import gaozhi.online.peoplety.record.service.AreaService;
 import gaozhi.online.peoplety.record.service.RecordTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -52,4 +56,17 @@ public class ConstantController {
     public List<RecordType> getRecordType() {
         return recordTypeService.getRecordTypes();
     }
+
+
+    /**
+     * 根据ip获取归属地
+     *
+     * @param ip
+     * @return
+     */
+    @GetMapping("/get/ip_info")
+    public IPInfo getIpInfo(@NotEmpty String ip) {
+        return areaService.getIpInfo(ip);
+    }
+
 }
