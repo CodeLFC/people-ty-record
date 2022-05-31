@@ -13,7 +13,8 @@ public interface CommentMapper {
 
     @Select("select id,userid,record_id recordId,content,url,time,ip" +
             " from comment " +
-            "where record_id = #{recordId}")
+            "where record_id = #{recordId} " +
+            "order by id desc")
     List<Comment> selectByRecordId(long recordId);
 
     @Delete("delete from comment " +
