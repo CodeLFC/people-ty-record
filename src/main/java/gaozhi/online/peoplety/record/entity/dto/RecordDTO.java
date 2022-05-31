@@ -1,7 +1,5 @@
 package gaozhi.online.peoplety.record.entity.dto;
 
-import com.github.pagehelper.PageInfo;
-import gaozhi.online.peoplety.record.entity.Comment;
 import gaozhi.online.peoplety.record.entity.Record;
 import lombok.Data;
 
@@ -13,15 +11,15 @@ import lombok.Data;
  */
 @Data
 public class RecordDTO {
-    public static final int CHILD_PAGE_SIZE = 3;
-    public static final int COMMENT_PAGE_SIZE = 5;
     private Record record;
     private Record parent;
     //收藏数量
-    private int favoriteNum;
+    private long favoriteNum;
     //是否收藏
     private boolean favorite;
-    private PageInfo<Record> childPageInfo;
-    private PageInfo<Comment> commentPageInfo;
+    //子数量
+    private long childNum;
+    //评论数量
+    private long commentNum;
 
 }

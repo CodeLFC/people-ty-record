@@ -58,34 +58,41 @@ public interface RecordMapper {
     @Select("select " +
             "id,parent_id parentId,userid,area_id areaId,record_type_id recordTypeId,enable,title,description,content,imgs,url,time,ip,top " +
             "from record " +
-            "where id = #{id}")
-    Record selectById(long id);
+            "where id = #{id} and enable = #{enable} ")
+    Record selectById(long id, boolean enable);
 
     @Select("select " +
             "id,parent_id parentId,userid,area_id areaId,record_type_id recordTypeId,enable,title,description,content,imgs,url,time,ip,top " +
             "from record " +
-            "where userid = #{userid} and enable = true " +
+            "where userid = #{userid}  and enable = #{enable} " +
             "order by id desc")
-    List<Record> selectByUserid(long userid);
+    List<Record> selectByUserid(long userid, boolean enable);
 
     @Select("select " +
             "id,parent_id parentId,userid,area_id areaId,record_type_id recordTypeId,enable,title,description,content,imgs,url,time,ip,top " +
             "from record " +
-            "where parent_id = #{parentId} and enable = true " +
+            "where parent_id = #{parentId}  and enable = #{enable} " +
             "order by id desc")
-    List<Record> selectByParentId(long parentId);
+    List<Record> selectByParentId(long parentId, boolean enable);
 
     @Select("select " +
             "id,parent_id parentId,userid,area_id areaId,record_type_id recordTypeId,enable,title,description,content,imgs,url,time,ip,top " +
             "from record " +
-            "where area_id  = #{areaId} and enable = true " +
+            "where area_id  = #{areaId}  and enable = #{enable} " +
             "order by id desc")
-    List<Record> selectByAreaId(int areaId);
+    List<Record> selectByAreaId(int areaId, boolean enable);
 
     @Select("select " +
             "id,parent_id parentId,userid,area_id areaId,record_type_id recordTypeId,enable,title,description,content,imgs,url,time,ip,top " +
             "from record " +
-            "where area_id  = #{areaId} and time between #{lowTime} and #{highTime} and enable = true " +
+            "where area_id  = #{areaId} and enable = #{enable} and time between #{lowTime} and #{highTime} " +
             "order by id desc")
-    List<Record> selectBetweenTime(int areaId, long lowTime, long highTime);
+    List<Record> selectBetweenTime(int areaId, long lowTime, long highTime, boolean enable);
+
+    @Select("select " +
+            "count(id) " +
+            "from record " +
+            "where parent_id = #{id}")
+    long selectChildCountById(long id);
+
 }

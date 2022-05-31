@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.constraints.NotNull;
 
 /**
@@ -40,7 +41,7 @@ public class RecordController {
      */
     @HeaderChecker
     @PostMapping("/post/record")
-    public Record publishRecord(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token,@RequestAttribute(TokenChecker.HEADER_ATTRIBUTE_IP) String ip, @RequestBody @NotNull Record record) {
+    public Record publishRecord(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @RequestAttribute(TokenChecker.HEADER_ATTRIBUTE_IP) String ip, @RequestBody @NotNull Record record) {
         record.setUserid(token.getUserid());
         record.setTime(System.currentTimeMillis());
         record.setIp(ip);
@@ -55,15 +56,44 @@ public class RecordController {
     /**
      * @description: 获取单个卷宗的详情
      * @param: recordId
-     * @param: streetId 街道id
      * @return: gaozhi.online.peoplety.record.entity.dto.RecordDTO
      * @author LiFucheng
      * @date: 2022/5/14 9:59
      */
     @HeaderChecker
     @GetMapping("/get/record")
-    public RecordDTO getRecordInfo(@NotNull Long recordId, Integer childPage, Integer childPageSize, Integer commentPage, Integer commentPageSize) {
-        return recordService.getRecordById(recordId, childPage, childPageSize, commentPage, commentPageSize);
+    public RecordDTO getRecordInfo(@NotNull Long recordId) {
+        return recordService.getRecordDTOById(recordId);
+    }
+
+    /**
+     * @description: 获取卷宗的子卷宗
+     * @param: recordId
+     * @param: pageNum
+     * @param: pageSize
+     * @return: com.github.pagehelper.PageInfo<gaozhi.online.peoplety.record.entity.Record>
+     * @author LiFucheng
+     * @date: 2022/5/31 15:55
+     */
+    @HeaderChecker
+    @GetMapping("/get/record/child")
+    public PageInfo<Record> getRecordChilds(@NotNull Long recordId, @NotNull Integer pageNum, @NotNull Integer pageSize) {
+        return recordService.getChildRecord(recordId, pageNum, pageSize);
+    }
+
+    /**
+     * @description: 获取卷宗的评论
+     * @param: recordId
+     * @param: pageNum
+     * @param: pageSize
+     * @return: com.github.pagehelper.PageInfo<gaozhi.online.peoplety.record.entity.Comment>
+     * @author LiFucheng
+     * @date: 2022/5/31 15:54
+     */
+    @HeaderChecker
+    @GetMapping("/get/record/comment")
+    public PageInfo<Comment> getRecordComments(@NotNull Long recordId, @NotNull Integer pageNum, @NotNull Integer pageSize) {
+        return recordService.getComments(recordId, pageNum, pageSize);
     }
 
     /**
@@ -107,7 +137,7 @@ public class RecordController {
      */
     @HeaderChecker
     @PostMapping("/post/comment")
-    public Comment commentRecord(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @RequestAttribute(TokenChecker.HEADER_ATTRIBUTE_IP) String ip,@RequestBody @NotNull Comment comment) {
+    public Comment commentRecord(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @RequestAttribute(TokenChecker.HEADER_ATTRIBUTE_IP) String ip, @RequestBody @NotNull Comment comment) {
         comment.setUserid(token.getUserid());
         comment.setTime(System.currentTimeMillis());
         comment.setIp(ip);
@@ -118,6 +148,7 @@ public class RecordController {
         }
         return comment;
     }
+
     /**
      * @description: TODO 删除评论
      * @author LiFucheng
@@ -134,6 +165,7 @@ public class RecordController {
         }
         return Result.success();
     }
+
     /**
      * @description: TODO 修改可见性
      * @author LiFucheng
@@ -142,8 +174,8 @@ public class RecordController {
      */
     @HeaderChecker
     @PatchMapping("/patch/record/visible")
-    public Result updateRecordVisible(@NotNull Long id,@NotNull Boolean visible) {
-        int res = recordService.updateVisible(id,visible);
+    public Result updateRecordVisible(@NotNull Long id, @NotNull Boolean visible) {
+        int res = recordService.updateVisible(id, visible);
         if (res <= 0) {
             //数据库异常创建失败
             throw new SQLBusinessException(SQLBusinessExceptionEnum.UPDATE_ERROR, "数据库删除失败");

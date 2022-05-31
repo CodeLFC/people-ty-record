@@ -36,9 +36,11 @@ public class RecordService {
     public int publish(Record record) {
         return recordMapper.insert(record);
     }
+
     public int publishComment(Comment comment) {
         return commentMapper.insert(comment);
     }
+
     /**
      * @description: 删除卷宗 供管理员调用
      * @param: recordId
@@ -49,33 +51,25 @@ public class RecordService {
     public int deleteRecord(long recordId) {
         return recordMapper.delete(recordId);
     }
+
     /**
      * @description: TODO 更改可见性
      * @author LiFucheng
      * @date 2022/5/24 17:09
      * @version 1.0
      */
-    public int updateVisible(long recordId,boolean visible){
-        return recordMapper.updateEnable(recordId,visible);
+    public int updateVisible(long recordId, boolean visible) {
+        return recordMapper.updateEnable(recordId, visible);
     }
+
     /**
      * @description: TODO 删除评论
      * @author LiFucheng
      * @date 2022/5/24 17:10
      * @version 1.0
      */
-    public int deleteComment(long id){
+    public int deleteComment(long id) {
         return commentMapper.delete(id);
-    }
-    /**
-     * @description: 根据卷宗编号查询卷宗
-     * @param: recordId
-     * @return: gaozhi.online.peoplety.record.entity.Record
-     * @author LiFucheng
-     * @date: 2022/5/14 15:54
-     */
-    public Record getRecordById(long recordId) {
-        return recordMapper.selectById(recordId);
     }
 
     /**
@@ -89,10 +83,10 @@ public class RecordService {
      * @author LiFucheng
      * @date: 2022/5/14 15:45
      */
-    public RecordDTO getRecordById(long recordId, Integer childPage, Integer childPageSize, Integer commentPage, Integer commentPageSize) {
+    public RecordDTO getRecordDTOById(long recordId) {
         //当前卷宗
-        Record record = recordMapper.selectById(recordId);
-        return wrapRecordDTO(record, childPage, childPageSize, commentPage, commentPageSize);
+        Record record = recordMapper.selectById(recordId, true);
+        return wrapRecordDTO(record);
     }
 
     /**
@@ -106,7 +100,7 @@ public class RecordService {
      */
     public PageInfo<Record> getRecordsByArea(int areaId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Record> records = recordMapper.selectByAreaId(areaId);
+        List<Record> records = recordMapper.selectByAreaId(areaId, true);
         return new PageInfo<>(records);
     }
 
@@ -121,8 +115,40 @@ public class RecordService {
      */
     public PageInfo<Record> getRecordsByUserid(long userid, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Record> records = recordMapper.selectByUserid(userid);
+        List<Record> records = recordMapper.selectByUserid(userid, true);
         return new PageInfo<>(records);
+    }
+
+    /**
+     * @description: 获取卷宗的子卷宗列表
+     * @param: recordId
+     * @param: pageNum
+     * @param: pageSize
+     * @return: com.github.pagehelper.PageInfo<gaozhi.online.peoplety.record.entity.Record>
+     * @author LiFucheng
+     * @date: 2022/5/31 15:37
+     */
+    public PageInfo<Record> getChildRecord(long recordId, int pageNum, int pageSize) {
+        //子卷宗
+        PageHelper.startPage(pageNum, pageSize);
+        List<Record> records = recordMapper.selectByParentId(recordId, true);
+        return new PageInfo<>(records);
+    }
+
+    /**
+     * @description: 获取卷宗的评论列表
+     * @param: recordId
+     * @param: pageNum
+     * @param: pageSize
+     * @return: com.github.pagehelper.PageInfo<gaozhi.online.peoplety.record.entity.Comment>
+     * @author LiFucheng
+     * @date: 2022/5/31 15:38
+     */
+    public PageInfo<Comment> getComments(long recordId, int pageNum, int pageSize) {
+        //评论
+        PageHelper.startPage(pageNum, pageSize);
+        List<Comment> comments = commentMapper.selectByRecordId(recordId);
+        return new PageInfo<>(comments);
     }
 
     /**
@@ -136,35 +162,24 @@ public class RecordService {
      * @author LiFucheng
      * @date: 2022/5/14 15:44
      */
-    private RecordDTO wrapRecordDTO(Record record, Integer childPage, Integer childPageSize, Integer commentPage, Integer commentPageSize) {
-        if (childPage == null) childPage = 1;
-        if (childPageSize == null) childPageSize = RecordDTO.CHILD_PAGE_SIZE;
-        if (commentPage == null) commentPage = 1;
-        if (commentPageSize == null) commentPageSize = RecordDTO.COMMENT_PAGE_SIZE;
+    private RecordDTO wrapRecordDTO(Record record) {
         RecordDTO recordDTO = new RecordDTO();
         if (record == null) {
             return recordDTO;
         }
         recordDTO.setRecord(record);
-        //子卷宗
-        PageHelper.startPage(childPage, childPageSize);
-        List<Record> records = recordMapper.selectByParentId(record.getId());
-        PageInfo<Record> childPageInfo = new PageInfo<>(records);
-        recordDTO.setChildPageInfo(childPageInfo);
-
         //父卷宗
         if (record.getParentId() != 0) {
-            Record parent = recordMapper.selectById(record.getParentId());
+            Record parent = recordMapper.selectById(record.getParentId(), true);
             recordDTO.setParent(parent);
         }
-        //评论
-        PageHelper.startPage(commentPage, commentPageSize);
-        List<Comment> comments = commentMapper.selectByRecordId(record.getId());
-        recordDTO.setCommentPageInfo(new PageInfo<>(comments));
+        //子卷宗数量
+        recordDTO.setChildNum(recordMapper.selectChildCountById(record.getId()));
+        //评论数量
+        recordDTO.setCommentNum(commentMapper.selectCommentCountByRecordId(record.getId()));
         //收藏数量  ---  test
         recordDTO.setFavorite(true);
         recordDTO.setFavoriteNum(1000000);
         return recordDTO;
     }
-
 }
