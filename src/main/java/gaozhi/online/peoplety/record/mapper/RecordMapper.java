@@ -82,6 +82,17 @@ public interface RecordMapper {
             "order by id desc")
     List<Record> selectByAreaId(int areaId, boolean enable);
 
+    @Select({"<script>",
+            "select " +
+            "id,parent_id parentId,userid,area_id areaId,record_type_id recordTypeId,enable,title,description,content,imgs,url,time,ip,top " +
+            "from record " +
+            "where area_id  = #{areaId}  and enable = #{enable} and record_type_id in " +
+            "<foreach collection='selectedTypes' item='item' index='index' open='(' separator=',' close=')'>",
+            "#{item}",
+            "</foreach>",
+            "</script>"})
+    List<Record> selectByAreaIdAndType(int areaId, boolean enable, List<Integer> selectedTypes);
+
     @Select("select " +
             "id,parent_id parentId,userid,area_id areaId,record_type_id recordTypeId,enable,title,description,content,imgs,url,time,ip,top " +
             "from record " +
@@ -93,6 +104,6 @@ public interface RecordMapper {
             "count(id) " +
             "from record " +
             "where parent_id = #{id} and enable = #{enable} ")
-    long selectChildCountById(long id,boolean enable);
+    long selectChildCountById(long id, boolean enable);
 
 }

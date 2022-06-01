@@ -98,9 +98,14 @@ public class RecordService {
      * @author LiFucheng
      * @date: 2022/5/14 15:52
      */
-    public PageInfo<Record> getRecordsByArea(int areaId, int pageNum, int pageSize) {
+    public PageInfo<Record> getRecordsByArea(int areaId, int pageNum, int pageSize, List<Integer> selectedTypes) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Record> records = recordMapper.selectByAreaId(areaId, true);
+        List<Record> records;
+        if (selectedTypes == null || selectedTypes.size() == 0) {
+            records = recordMapper.selectByAreaId(areaId, true);
+        } else {
+            records = recordMapper.selectByAreaIdAndType(areaId, true, selectedTypes);
+        }
         return new PageInfo<>(records);
     }
 
@@ -174,7 +179,7 @@ public class RecordService {
             recordDTO.setParent(parent);
         }
         //子卷宗数量
-        recordDTO.setChildNum(recordMapper.selectChildCountById(record.getId(),true));
+        recordDTO.setChildNum(recordMapper.selectChildCountById(record.getId(), true));
         //评论数量
         recordDTO.setCommentNum(commentMapper.selectCommentCountByRecordId(record.getId()));
         //收藏数量  ---  test
@@ -182,23 +187,25 @@ public class RecordService {
         recordDTO.setFavoriteNum(0);
         return recordDTO;
     }
-    /** 
-     * @description: 根据id获取卷宗信息 
-     * @param: id 
-     * @return: gaozhi.online.peoplety.record.entity.Record 
+
+    /**
+     * @description: 根据id获取卷宗信息
+     * @param: id
+     * @return: gaozhi.online.peoplety.record.entity.Record
      * @author LiFucheng
      * @date: 2022/6/1 12:32
-     */ 
+     */
     public Record getRecordById(long id) {
         return recordMapper.selectById(id, true);
     }
-    /** 
-     * @description: 根据id获取评论 
-     * @param: id 
-     * @return: gaozhi.online.peoplety.record.entity.Comment 
+
+    /**
+     * @description: 根据id获取评论
+     * @param: id
+     * @return: gaozhi.online.peoplety.record.entity.Comment
      * @author LiFucheng
      * @date: 2022/6/1 13:27
-     */ 
+     */
     public Comment getCommentById(long id) {
         return commentMapper.selectById(id);
     }

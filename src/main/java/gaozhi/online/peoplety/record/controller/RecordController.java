@@ -1,6 +1,8 @@
 package gaozhi.online.peoplety.record.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import gaozhi.online.base.exception.SQLBusinessException;
 import gaozhi.online.base.exception.enums.SQLBusinessExceptionEnum;
 import gaozhi.online.base.interceptor.HeaderChecker;
@@ -17,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author LiFucheng
@@ -33,6 +36,7 @@ public class RecordController {
 
     @Autowired
     private RecordService recordService;
+    private final Gson gson = new Gson();
 
     /**
      * @description: 发布卷宗
@@ -126,8 +130,11 @@ public class RecordController {
      */
     @HeaderChecker
     @GetMapping("/get/area/records")
-    public PageInfo<Record> getAreaRecordsByPage(@NotNull Integer areaId, @NotNull Integer pageNum, @NotNull Integer pageSize) {
-        return recordService.getRecordsByArea(areaId, pageNum, pageSize);
+    public PageInfo<Record> getAreaRecordsByPage(@NotNull Integer areaId, @NotNull Integer pageNum, @NotNull Integer pageSize, String selectedTypes) {
+       // log.info("types:{}", selectedTypes);
+        List<Integer> selectList = gson.fromJson(selectedTypes, new TypeToken<List<Integer>>() {
+        }.getType());
+        return recordService.getRecordsByArea(areaId, pageNum, pageSize, selectList);
     }
 
     /**
