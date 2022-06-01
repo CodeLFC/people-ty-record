@@ -174,12 +174,32 @@ public class RecordService {
             recordDTO.setParent(parent);
         }
         //子卷宗数量
-        recordDTO.setChildNum(recordMapper.selectChildCountById(record.getId()));
+        recordDTO.setChildNum(recordMapper.selectChildCountById(record.getId(),true));
         //评论数量
         recordDTO.setCommentNum(commentMapper.selectCommentCountByRecordId(record.getId()));
         //收藏数量  ---  test
-        recordDTO.setFavorite(true);
-        recordDTO.setFavoriteNum(1000000);
+        recordDTO.setFavorite(false);
+        recordDTO.setFavoriteNum(0);
         return recordDTO;
+    }
+    /** 
+     * @description: 根据id获取卷宗信息 
+     * @param: id 
+     * @return: gaozhi.online.peoplety.record.entity.Record 
+     * @author LiFucheng
+     * @date: 2022/6/1 12:32
+     */ 
+    public Record getRecordById(long id) {
+        return recordMapper.selectById(id, true);
+    }
+    /** 
+     * @description: 根据id获取评论 
+     * @param: id 
+     * @return: gaozhi.online.peoplety.record.entity.Comment 
+     * @author LiFucheng
+     * @date: 2022/6/1 13:27
+     */ 
+    public Comment getCommentById(long id) {
+        return commentMapper.selectById(id);
     }
 }

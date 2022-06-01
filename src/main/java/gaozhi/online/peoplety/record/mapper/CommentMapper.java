@@ -20,8 +20,13 @@ public interface CommentMapper {
     @Delete("delete from comment " +
             "where id = #{id}")
     int delete(long id);
+
     @Select("select count(id) " +
             "from comment " +
             "where record_id = #{id}")
     long selectCommentCountByRecordId(long id);
+
+    @Select("select id,userid,record_id recordId,content,url,time,ip from comment " +
+            "where id = #{id}")
+    Comment selectById(long id);
 }

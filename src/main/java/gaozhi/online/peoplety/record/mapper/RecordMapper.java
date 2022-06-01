@@ -92,7 +92,7 @@ public interface RecordMapper {
     @Select("select " +
             "count(id) " +
             "from record " +
-            "where parent_id = #{id}")
-    long selectChildCountById(long id);
+            "where parent_id = #{id} and enable = #{enable} ")
+    long selectChildCountById(long id,boolean enable);
 
 }

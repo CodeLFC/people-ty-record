@@ -8,6 +8,8 @@ import gaozhi.online.base.result.Result;
 import gaozhi.online.peoplety.record.checker.TokenChecker;
 import gaozhi.online.peoplety.record.entity.*;
 import gaozhi.online.peoplety.record.entity.dto.RecordDTO;
+import gaozhi.online.peoplety.record.exception.UserException;
+import gaozhi.online.peoplety.record.exception.enums.UserExceptionEnum;
 import gaozhi.online.peoplety.record.service.RecordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,35 +152,51 @@ public class RecordController {
     }
 
     /**
-     * @description: TODO 删除评论
+     * @description: TODO 删除卷宗，实际操作为修改可见性，真实删除接口只有管理员可以访问
      * @author LiFucheng
      * @date 2022/5/24 17:13
      * @version 1.0
      */
     @HeaderChecker
-    @DeleteMapping("/delete/comment")
-    public Result deleteComment(@NotNull Long id) {
-        int res = recordService.deleteComment(id);
+    @DeleteMapping("/delete/record")
+    public Result updateRecordVisible(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @NotNull Long id) {
+        Record record = recordService.getRecordById(id);
+        if (record == null) {
+            throw new SQLBusinessException(SQLBusinessExceptionEnum.DELETE_ERROR, "卷宗已删除");
+        }
+        if (token.getUserid() != record.getUserid()) {
+            throw new UserException(UserExceptionEnum.USER_AUTH_ERROR, "不能删除其他人的内容");
+        }
+        int res = recordService.updateVisible(id, false);
         if (res <= 0) {
-            //数据库异常创建失败
-            throw new SQLBusinessException(SQLBusinessExceptionEnum.DELETE_ERROR, "数据库删除失败");
+            //数据库异常修改失败
+            throw new SQLBusinessException(SQLBusinessExceptionEnum.UPDATE_ERROR, "删除失败");
         }
         return Result.success();
     }
 
     /**
-     * @description: TODO 修改可见性
+     * @description: 删除评论
+     * @param: token
+     * @param: id
+     * @return: gaozhi.online.base.result.Result
      * @author LiFucheng
-     * @date 2022/5/24 17:13
-     * @version 1.0
+     * @date: 2022/6/1 12:35
      */
     @HeaderChecker
-    @PatchMapping("/patch/record/visible")
-    public Result updateRecordVisible(@NotNull Long id, @NotNull Boolean visible) {
-        int res = recordService.updateVisible(id, visible);
+    @DeleteMapping("/delete/comment")
+    public Result deleteComment(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @NotNull Long id) {
+        Comment comment = recordService.getCommentById(id);
+        if (comment == null) {
+            throw new SQLBusinessException(SQLBusinessExceptionEnum.DELETE_ERROR, "评论已删除");
+        }
+        if (token.getUserid() != comment.getUserid()) {
+            throw new UserException(UserExceptionEnum.USER_AUTH_ERROR, "不能删除其他人的内容");
+        }
+        int res = recordService.deleteComment(id);
         if (res <= 0) {
-            //数据库异常创建失败
-            throw new SQLBusinessException(SQLBusinessExceptionEnum.UPDATE_ERROR, "数据库删除失败");
+            //数据库异常修改失败
+            throw new SQLBusinessException(SQLBusinessExceptionEnum.UPDATE_ERROR, "删除失败");
         }
         return Result.success();
     }
