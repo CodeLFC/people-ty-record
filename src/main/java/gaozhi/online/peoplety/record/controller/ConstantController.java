@@ -68,5 +68,4 @@ public class ConstantController {
     public IPInfo getIpInfo(@NotEmpty String ip) {
         return areaService.getIpInfo(ip);
     }
-
 }

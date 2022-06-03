@@ -207,4 +207,23 @@ public class RecordController {
         }
         return Result.success();
     }
+
+    /**
+     * @description: 获取一些统计数据
+     * @param: token
+	 * @param: userid
+     * @return: gaozhi.online.peoplety.record.entity.RecordCount
+     * @author LiFucheng
+     * @date: 2022/6/3 18:58
+     */
+    //@HeaderChecker
+    @GetMapping("/get/count")
+    public UserRecordCount getRecordCount(@NotNull Long userid){
+        UserRecordCount userRecordCount = new UserRecordCount();
+        userRecordCount.setUserid(userid);
+        long recordNum  = recordService.countRecordNumByUserId(userid);
+        userRecordCount.setRecordNum(recordNum);
+        userRecordCount.setFavoriteNum(0);
+        return userRecordCount;
+    }
 }

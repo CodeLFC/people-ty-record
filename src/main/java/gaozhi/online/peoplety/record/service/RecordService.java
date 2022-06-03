@@ -209,4 +209,14 @@ public class RecordService {
     public Comment getCommentById(long id) {
         return commentMapper.selectById(id);
     }
+    /**
+     * @description: 获取用户发布的卷宗的数量
+     * @param: userid
+     * @return: long
+     * @author LiFucheng
+     * @date: 2022/6/3 19:00
+     */
+    public long countRecordNumByUserId(long userid) {
+        return recordMapper.countRecordNumByUserId(userid,true);
+    }
 }

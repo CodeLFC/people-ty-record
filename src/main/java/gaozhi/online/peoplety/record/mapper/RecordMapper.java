@@ -84,10 +84,10 @@ public interface RecordMapper {
 
     @Select({"<script>",
             "select " +
-            "id,parent_id parentId,userid,area_id areaId,record_type_id recordTypeId,enable,title,description,content,imgs,url,time,ip,top " +
-            "from record " +
-            "where area_id  = #{areaId}  and enable = #{enable} and record_type_id in " +
-            "<foreach collection='selectedTypes' item='item' index='index' open='(' separator=',' close=')'>",
+                    "id,parent_id parentId,userid,area_id areaId,record_type_id recordTypeId,enable,title,description,content,imgs,url,time,ip,top " +
+                    "from record " +
+                    "where area_id  = #{areaId}  and enable = #{enable} and record_type_id in " +
+                    "<foreach collection='selectedTypes' item='item' index='index' open='(' separator=',' close=')'>",
             "#{item}",
             "</foreach>",
             "</script>"})
@@ -106,4 +106,8 @@ public interface RecordMapper {
             "where parent_id = #{id} and enable = #{enable} ")
     long selectChildCountById(long id, boolean enable);
 
+    @Select("select count(id) " +
+            "from record " +
+            "where userid = #{userid} and  enable = #{enable} ")
+    long countRecordNumByUserId(long userid, boolean enable);
 }
