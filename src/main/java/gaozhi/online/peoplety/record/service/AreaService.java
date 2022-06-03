@@ -57,7 +57,12 @@ public class AreaService {
             log.info("catch ip info:{}", infoDB);
             return infoDB.getIPInfo();
         }
-
+        //远程过程调用时间很长，如果为空需要提前插入
+        if (infoDB == null) {
+            infoDB = new IPInfoDB();
+            infoDB.setIp(ip);
+            ipInfoMapper.insert(infoDB);
+        }
 
         Map<String, String> params = new HashMap<>();
         params.put("token", ip138Config.getToken());
@@ -69,16 +74,10 @@ public class AreaService {
         if (info == null || !"ok".equals(info.getRet())) {
             throw new BusinessRuntimeException(ServerExceptionEnum.GENERAL_ERROR, "ip138远程服务调用异常：" + info);
         }
-        if (infoDB != null) {
-            infoDB.setTime(System.currentTimeMillis());
-            infoDB.setIPInfo(info);
-            ipInfoMapper.updateIPInfo(infoDB);
-        } else {
-            infoDB = new IPInfoDB();
-            infoDB.setIPInfo(info);
-            infoDB.setTime(System.currentTimeMillis());
-            ipInfoMapper.insert(infoDB);
-        }
+        //更新信息
+        infoDB.setTime(System.currentTimeMillis());
+        infoDB.setIPInfo(info);
+        ipInfoMapper.updateIPInfo(infoDB);
         return info;
     }
 }
