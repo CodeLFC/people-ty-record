@@ -65,7 +65,7 @@ public interface RecordMapper {
             "id,parent_id parentId,userid,area_id areaId,record_type_id recordTypeId,enable,title,description,content,imgs,url,time,ip,top " +
             "from record " +
             "where userid = #{userid}  and enable = #{enable} " +
-            "order by id desc")
+            "order by top desc, id desc")
     List<Record> selectByUserid(long userid, boolean enable);
 
     @Select("select " +

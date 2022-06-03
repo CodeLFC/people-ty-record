@@ -113,7 +113,7 @@ public class RecordController {
      * @author LiFucheng
      * @date: 2022/5/14 10:00
      */
-    @HeaderChecker
+   // @HeaderChecker
     @GetMapping("/get/user/records")
     public PageInfo<Record> getUserRecordsByPage(@NotNull Long userid, @NotNull Integer pageNum, @NotNull Integer pageSize) {
         return recordService.getRecordsByUserid(userid, pageNum, pageSize);
