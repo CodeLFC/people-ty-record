@@ -113,7 +113,7 @@ public class RecordController {
      * @author LiFucheng
      * @date: 2022/5/14 10:00
      */
-   // @HeaderChecker
+    @HeaderChecker
     @GetMapping("/get/user/records")
     public PageInfo<Record> getUserRecordsByPage(@NotNull Long userid, @NotNull Integer pageNum, @NotNull Integer pageSize) {
         return recordService.getRecordsByUserid(userid, pageNum, pageSize);
@@ -128,7 +128,7 @@ public class RecordController {
      * @author LiFucheng
      * @date: 2022/5/14 15:58
      */
-   // @HeaderChecker
+    @HeaderChecker
     @GetMapping("/get/area/records")
     public PageInfo<Record> getAreaRecordsByPage(@NotNull Integer areaId, @NotNull Integer pageNum, @NotNull Integer pageSize, String selectedTypes) {
        // log.info("types:{}", selectedTypes);
@@ -216,7 +216,7 @@ public class RecordController {
      * @author LiFucheng
      * @date: 2022/6/3 18:58
      */
-    //@HeaderChecker
+    @HeaderChecker
     @GetMapping("/get/count")
     public UserRecordCount getRecordCount(@NotNull Long userid){
         UserRecordCount userRecordCount = new UserRecordCount();
