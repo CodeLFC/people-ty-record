@@ -128,7 +128,7 @@ public class RecordController {
      * @author LiFucheng
      * @date: 2022/5/14 15:58
      */
-    @HeaderChecker
+   // @HeaderChecker
     @GetMapping("/get/area/records")
     public PageInfo<Record> getAreaRecordsByPage(@NotNull Integer areaId, @NotNull Integer pageNum, @NotNull Integer pageSize, String selectedTypes) {
        // log.info("types:{}", selectedTypes);

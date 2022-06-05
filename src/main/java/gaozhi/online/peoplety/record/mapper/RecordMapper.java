@@ -90,6 +90,7 @@ public interface RecordMapper {
                     "<foreach collection='selectedTypes' item='item' index='index' open='(' separator=',' close=')'>",
             "#{item}",
             "</foreach>",
+            "order by id desc",
             "</script>"})
     List<Record> selectByAreaIdAndType(int areaId, boolean enable, List<Integer> selectedTypes);
 
