@@ -1,5 +1,6 @@
 package gaozhi.online.peoplety.record.entity.dto;
 
+import gaozhi.online.peoplety.record.entity.Favorite;
 import gaozhi.online.peoplety.record.entity.Record;
 import lombok.Data;
 
@@ -15,11 +16,10 @@ public class RecordDTO {
     private Record parent;
     //收藏数量
     private long favoriteNum;
-    //是否收藏
-    private boolean favorite;
     //子数量
     private long childNum;
     //评论数量
     private long commentNum;
-
+    //所收藏的收藏夹
+    private Favorite favorite;
 }

@@ -68,8 +68,8 @@ public class RecordController {
      */
     @HeaderChecker
     @GetMapping("/get/record")
-    public RecordDTO getRecordInfo(@NotNull Long recordId) {
-        return recordService.getRecordDTOById(recordId);
+    public RecordDTO getRecordInfo(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @NotNull Long recordId) {
+        return recordService.getRecordDTOById(recordId,token.getUserid());
     }
 
     /**

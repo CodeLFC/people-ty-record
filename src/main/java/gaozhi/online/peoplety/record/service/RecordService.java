@@ -7,10 +7,10 @@ import gaozhi.online.peoplety.record.entity.Record;
 import gaozhi.online.peoplety.record.entity.dto.RecordDTO;
 import gaozhi.online.peoplety.record.mapper.CommentMapper;
 import gaozhi.online.peoplety.record.mapper.RecordMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +25,13 @@ public class RecordService {
     private RecordMapper recordMapper;
     @Resource
     private CommentMapper commentMapper;
+
+    private final FavoriteService favoriteService;
+
+    @Autowired
+    public RecordService(FavoriteService favoriteService) {
+        this.favoriteService = favoriteService;
+    }
 
     /**
      * @description: 发布卷宗
@@ -83,10 +90,10 @@ public class RecordService {
      * @author LiFucheng
      * @date: 2022/5/14 15:45
      */
-    public RecordDTO getRecordDTOById(long recordId) {
+    public RecordDTO getRecordDTOById(long recordId,long userid) {
         //当前卷宗
         Record record = recordMapper.selectById(recordId, true);
-        return wrapRecordDTO(record);
+        return wrapRecordDTO(record,userid);
     }
 
     /**
@@ -167,7 +174,7 @@ public class RecordService {
      * @author LiFucheng
      * @date: 2022/5/14 15:44
      */
-    private RecordDTO wrapRecordDTO(Record record) {
+    private RecordDTO wrapRecordDTO(Record record,long userid) {
         RecordDTO recordDTO = new RecordDTO();
         if (record == null) {
             return recordDTO;
@@ -182,9 +189,10 @@ public class RecordService {
         recordDTO.setChildNum(recordMapper.selectChildCountById(record.getId(), true));
         //评论数量
         recordDTO.setCommentNum(commentMapper.selectCommentCountByRecordId(record.getId()));
-        //收藏数量  ---  test
-        recordDTO.setFavorite(false);
-        recordDTO.setFavoriteNum(0);
+        //收藏数量
+        recordDTO.setFavoriteNum(favoriteService.getRecordFavoriteCount(record.getId()));
+        //我是否收藏
+        recordDTO.setFavorite(favoriteService.getRecordFavorite(userid,record.getId()));
         return recordDTO;
     }
 
@@ -209,6 +217,7 @@ public class RecordService {
     public Comment getCommentById(long id) {
         return commentMapper.selectById(id);
     }
+
     /**
      * @description: 获取用户发布的卷宗的数量
      * @param: userid
@@ -217,6 +226,6 @@ public class RecordService {
      * @date: 2022/6/3 19:00
      */
     public long countRecordNumByUserId(long userid) {
-        return recordMapper.countRecordNumByUserId(userid,true);
+        return recordMapper.countRecordNumByUserId(userid, true);
     }
 }
