@@ -25,8 +25,6 @@ public class UserService {
     private RestTemplate restTemplate;
 
     public Result checkToken(String token, String url, String clientIp) {
-        if (true)
-            return Result.success();
         //创建请求头
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(TokenChecker.HEADER_CHECKER_NAME, token);
