@@ -12,6 +12,7 @@ import gaozhi.online.peoplety.record.entity.*;
 import gaozhi.online.peoplety.record.entity.dto.RecordDTO;
 import gaozhi.online.peoplety.record.exception.UserException;
 import gaozhi.online.peoplety.record.exception.enums.UserExceptionEnum;
+import gaozhi.online.peoplety.record.service.FavoriteService;
 import gaozhi.online.peoplety.record.service.RecordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,8 @@ public class RecordController {
 
     @Autowired
     private RecordService recordService;
+    @Autowired
+    private FavoriteService favoriteService;
     private final Gson gson = new Gson();
 
     /**
@@ -69,7 +72,7 @@ public class RecordController {
     @HeaderChecker
     @GetMapping("/get/record")
     public RecordDTO getRecordInfo(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @NotNull Long recordId) {
-        return recordService.getRecordDTOById(recordId,token.getUserid());
+        return recordService.getRecordDTOById(recordId, token.getUserid());
     }
 
     /**
@@ -131,7 +134,7 @@ public class RecordController {
     @HeaderChecker
     @GetMapping("/get/area/records")
     public PageInfo<Record> getAreaRecordsByPage(@NotNull Integer areaId, @NotNull Integer pageNum, @NotNull Integer pageSize, String selectedTypes) {
-       // log.info("types:{}", selectedTypes);
+        // log.info("types:{}", selectedTypes);
         List<Integer> selectList = gson.fromJson(selectedTypes, new TypeToken<List<Integer>>() {
         }.getType());
         return recordService.getRecordsByArea(areaId, pageNum, pageSize, selectList);
@@ -211,19 +214,19 @@ public class RecordController {
     /**
      * @description: 获取一些统计数据
      * @param: token
-	 * @param: userid
+     * @param: userid
      * @return: gaozhi.online.peoplety.record.entity.RecordCount
      * @author LiFucheng
      * @date: 2022/6/3 18:58
      */
     @HeaderChecker
     @GetMapping("/get/count")
-    public UserRecordCount getRecordCount(@NotNull Long userid){
+    public UserRecordCount getRecordCount(@NotNull Long userid) {
         UserRecordCount userRecordCount = new UserRecordCount();
         userRecordCount.setUserid(userid);
-        long recordNum  = recordService.countRecordNumByUserId(userid);
+        long recordNum = recordService.countRecordNumByUserId(userid);
         userRecordCount.setRecordNum(recordNum);
-        userRecordCount.setFavoriteNum(0);
+        userRecordCount.setFavoriteNum(favoriteService.getFavoriteCountByUserid(userid));
         return userRecordCount;
     }
 }

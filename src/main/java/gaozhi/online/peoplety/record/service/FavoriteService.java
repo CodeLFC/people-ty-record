@@ -158,4 +158,14 @@ public class FavoriteService {
     public Favorite getRecordFavorite(long userid, long recordId) {
        return favoriteMapper.getRecordFavorite(userid,recordId);
     }
+    /** 
+     * @description: 获取收藏夹的数量 
+     * @param: userid 
+     * @return: long 
+     * @author LiFucheng
+     * @date: 2022/6/8 21:47
+     */ 
+    public long getFavoriteCountByUserid(long userid){
+        return favoriteMapper.getFavoriteCountByUserId(userid);
+    }
 }

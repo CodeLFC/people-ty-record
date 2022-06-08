@@ -60,10 +60,11 @@ public interface FavoriteMapper {
             "from favorite " +
             "where id = #{id}")
     Favorite getFavoriteById(long id);
+
     /**
      * @description: select * from 表1 left join 表2   on连接条件   [where条件查询]；
      * @param: userid
-	 * @param: recordId
+     * @param: recordId
      * @return: gaozhi.online.peoplety.record.entity.Favorite
      * @author LiFucheng
      * @date: 2022/6/8 21:22
@@ -72,4 +73,15 @@ public interface FavoriteMapper {
             "from favorite left join favorite_item on favorite.id=favorite_item.favorite_id " +
             "where userid = #{userid} and record_id = #{recordId}")
     Favorite getRecordFavorite(long userid, long recordId);
+    /**
+     * @description: 统计收藏夹的数量
+     * @param: userid
+     * @return: long
+     * @author LiFucheng
+     * @date: 2022/6/8 21:46
+     */
+    @Select("select count(id) " +
+            "from favorite " +
+            "where userid = #{userid}")
+    long getFavoriteCountByUserId(long userid);
 }
