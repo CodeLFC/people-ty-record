@@ -64,9 +64,14 @@ public class FavoriteService {
      * @author LiFucheng
      * @date: 2022/6/8 15:38
      */
-    public PageInfo<Favorite> getFavoriteByUserid(long userid, int pageNum, int pageSize) {
+    public PageInfo<Favorite> getFavoriteByUserid(long userid,boolean visible, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Favorite> favorites = favoriteMapper.getFavoritesByUserId(userid);
+        List<Favorite> favorites;
+        if(visible) {
+           favorites = favoriteMapper.getFavoritesByUserId(userid);
+        }else{
+            favorites = favoriteMapper.getVisibleFavoritesByUserId(userid);
+        }
         return new PageInfo<>(favorites);
     }
     /** 

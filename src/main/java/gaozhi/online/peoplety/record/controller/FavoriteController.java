@@ -45,8 +45,8 @@ public class FavoriteController {
      */
     @HeaderChecker
     @GetMapping("/get/user/favorites")
-    public PageInfo<Favorite> getUserFavorites(@NotNull Long userid, @NotNull Integer pageNum, @NotNull Integer pageSize) {
-        return favoriteService.getFavoriteByUserid(userid, pageNum, pageSize);
+    public PageInfo<Favorite> getUserFavorites(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @NotNull Long userid, @NotNull Integer pageNum, @NotNull Integer pageSize) {
+        return favoriteService.getFavoriteByUserid(userid, token.getUserid() == userid, pageNum, pageSize);
     }
 
     /**

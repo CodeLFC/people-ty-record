@@ -56,6 +56,18 @@ public interface FavoriteMapper {
             "where userid = #{userid}")
     List<Favorite> getFavoritesByUserId(long userid);
 
+    /**
+     * @description: 获取可见的收藏夹
+     * @param: userid
+     * @return: java.util.List<gaozhi.online.peoplety.record.entity.Favorite>
+     * @author LiFucheng
+     * @date: 2022/6/9 15:01
+     */
+    @Select("select id,userid,name,description,time,visible " +
+            "from favorite " +
+            "where userid = #{userid} and visible = true")
+    List<Favorite> getVisibleFavoritesByUserId(long userid);
+
     @Select("select id,userid,name,description,time,visible " +
             "from favorite " +
             "where id = #{id}")
@@ -73,6 +85,7 @@ public interface FavoriteMapper {
             "from favorite left join favorite_item on favorite.id=favorite_item.favorite_id " +
             "where userid = #{userid} and record_id = #{recordId}")
     Favorite getRecordFavorite(long userid, long recordId);
+
     /**
      * @description: 统计收藏夹的数量
      * @param: userid
@@ -84,4 +97,5 @@ public interface FavoriteMapper {
             "from favorite " +
             "where userid = #{userid}")
     long getFavoriteCountByUserId(long userid);
+
 }
