@@ -193,6 +193,10 @@ public class RecordService {
         recordDTO.setFavoriteNum(favoriteService.getRecordFavoriteCount(record.getId()));
         //我是否收藏
         recordDTO.setFavorite(favoriteService.getRecordFavorite(userid,record.getId()));
+        //收藏条目
+        if(recordDTO.getFavorite()!=null){
+            recordDTO.setItem(favoriteService.getFavoriteItemByFavoriteInfo(recordDTO.getFavorite().getId(),record.getId()));
+        }
         return recordDTO;
     }
 

@@ -22,4 +22,6 @@ public class RecordDTO {
     private long commentNum;
     //所收藏的收藏夹
     private Favorite favorite;
+    //收藏的条目
+    private Favorite.Item item;
 }
