@@ -58,8 +58,14 @@ public interface RecordMapper {
     @Select("select " +
             "id,parent_id parentId,userid,area_id areaId,record_type_id recordTypeId,enable,title,description,content,imgs,url,time,ip,top " +
             "from record " +
-            "where id = #{id} and enable = #{enable} ")
-    Record selectById(long id, boolean enable);
+            "where id = #{id} ")
+    Record selectById(long id);
+
+    @Select("select " +
+            "id,parent_id parentId,userid,area_id areaId,record_type_id recordTypeId,enable,title,description,content,imgs,url,time,ip,top " +
+            "from record " +
+            "where id = #{id} and enable = #{enable}")
+    Record selectVisibleById(long id,boolean enable);
 
     @Select("select " +
             "id,parent_id parentId,userid,area_id areaId,record_type_id recordTypeId,enable,title,description,content,imgs,url,time,ip,top " +

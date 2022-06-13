@@ -90,10 +90,10 @@ public class RecordService {
      * @author LiFucheng
      * @date: 2022/5/14 15:45
      */
-    public RecordDTO getRecordDTOById(long recordId,long userid) {
+    public RecordDTO getRecordDTOById(long recordId, long userid) {
         //当前卷宗
-        Record record = recordMapper.selectById(recordId, true);
-        return wrapRecordDTO(record,userid);
+        Record record = recordMapper.selectById(recordId);
+        return wrapRecordDTO(record, userid);
     }
 
     /**
@@ -174,7 +174,7 @@ public class RecordService {
      * @author LiFucheng
      * @date: 2022/5/14 15:44
      */
-    private RecordDTO wrapRecordDTO(Record record,long userid) {
+    private RecordDTO wrapRecordDTO(Record record, long userid) {
         RecordDTO recordDTO = new RecordDTO();
         if (record == null) {
             return recordDTO;
@@ -182,7 +182,7 @@ public class RecordService {
         recordDTO.setRecord(record);
         //父卷宗
         if (record.getParentId() != 0) {
-            Record parent = recordMapper.selectById(record.getParentId(), true);
+            Record parent = recordMapper.selectById(record.getParentId());
             recordDTO.setParent(parent);
         }
         //子卷宗数量
@@ -192,10 +192,10 @@ public class RecordService {
         //收藏数量
         recordDTO.setFavoriteNum(favoriteService.getRecordFavoriteCount(record.getId()));
         //我是否收藏
-        recordDTO.setFavorite(favoriteService.getRecordFavorite(userid,record.getId()));
+        recordDTO.setFavorite(favoriteService.getRecordFavorite(userid, record.getId()));
         //收藏条目
-        if(recordDTO.getFavorite()!=null){
-            recordDTO.setItem(favoriteService.getFavoriteItemByFavoriteInfo(recordDTO.getFavorite().getId(),record.getId()));
+        if (recordDTO.getFavorite() != null) {
+            recordDTO.setItem(favoriteService.getFavoriteItemByFavoriteInfo(recordDTO.getFavorite().getId(), record.getId()));
         }
         return recordDTO;
     }
@@ -207,8 +207,8 @@ public class RecordService {
      * @author LiFucheng
      * @date: 2022/6/1 12:32
      */
-    public Record getRecordById(long id) {
-        return recordMapper.selectById(id, true);
+    public Record getVisibleRecordById(long id) {
+        return recordMapper.selectVisibleById(id, true);
     }
 
     /**

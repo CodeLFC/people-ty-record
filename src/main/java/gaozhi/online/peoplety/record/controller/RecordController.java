@@ -170,7 +170,7 @@ public class RecordController {
     @HeaderChecker
     @DeleteMapping("/delete/record")
     public Result updateRecordVisible(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @NotNull Long id) {
-        Record record = recordService.getRecordById(id);
+        Record record = recordService.getVisibleRecordById(id);
         if (record == null) {
             throw new SQLBusinessException(SQLBusinessExceptionEnum.DELETE_ERROR, "卷宗已删除");
         }
