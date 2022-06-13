@@ -173,8 +173,11 @@ public class FavoriteService {
      * @author LiFucheng
      * @date: 2022/6/8 21:47
      */
-    public long getFavoriteCountByUserid(long userid) {
-        return favoriteMapper.getFavoriteCountByUserId(userid);
+    public long getFavoriteCountByUserid(long userid, boolean showAll) {
+        if (showAll) {
+            return favoriteMapper.getFavoriteCountByUserId(userid);
+        }
+        return favoriteMapper.getVisibleFavoriteCountByUserId(userid);
     }
 
     /**

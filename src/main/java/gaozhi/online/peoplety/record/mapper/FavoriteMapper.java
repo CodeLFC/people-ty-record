@@ -98,4 +98,8 @@ public interface FavoriteMapper {
             "where userid = #{userid}")
     long getFavoriteCountByUserId(long userid);
 
+    @Select("select count(id) " +
+            "from favorite " +
+            "where userid = #{userid} and visible = true")
+    long getVisibleFavoriteCountByUserId(long userid);
 }

@@ -221,12 +221,12 @@ public class RecordController {
      */
     @HeaderChecker
     @GetMapping("/get/count")
-    public UserRecordCount getRecordCount(@NotNull Long userid) {
+    public UserRecordCount getRecordCount(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @NotNull Long userid) {
         UserRecordCount userRecordCount = new UserRecordCount();
         userRecordCount.setUserid(userid);
         long recordNum = recordService.countRecordNumByUserId(userid);
         userRecordCount.setRecordNum(recordNum);
-        userRecordCount.setFavoriteNum(favoriteService.getFavoriteCountByUserid(userid));
+        userRecordCount.setFavoriteNum(favoriteService.getFavoriteCountByUserid(userid, token.getUserid() == userid));
         return userRecordCount;
     }
 }
