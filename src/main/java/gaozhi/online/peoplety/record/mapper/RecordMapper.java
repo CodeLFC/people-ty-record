@@ -65,7 +65,7 @@ public interface RecordMapper {
             "id,parent_id parentId,userid,area_id areaId,record_type_id recordTypeId,enable,title,description,content,imgs,url,time,ip,top " +
             "from record " +
             "where id = #{id} and enable = #{enable}")
-    Record selectVisibleById(long id,boolean enable);
+    Record selectVisibleById(long id, boolean enable);
 
     @Select("select " +
             "id,parent_id parentId,userid,area_id areaId,record_type_id recordTypeId,enable,title,description,content,imgs,url,time,ip,top " +
@@ -117,4 +117,17 @@ public interface RecordMapper {
             "from record " +
             "where userid = #{userid} and  enable = #{enable} ")
     long countRecordNumByUserId(long userid, boolean enable);
+    /** 
+     * @description: 联表查询，如果分库会产生问题 
+     * @param: userid 
+     * @return: java.util.List<gaozhi.online.peoplety.record.entity.Record> 
+     * @author LiFucheng
+     * @date: 2022/6/14 12:55
+     */ 
+    @Select("select " +
+            "record.id,parent_id parentId,record.userid,area_id areaId,record_type_id recordTypeId,enable,title,description,content,imgs,url,record.time,ip,top " +
+            "from record left join friend on friend.friend_id = record.userid " +
+            "where friend.userid  = #{userid} and record.enable = true " +
+            "order by record.id desc")
+    List<Record> getAttentionUserRecordsByUserid(long userid);
 }

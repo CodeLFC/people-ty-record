@@ -232,4 +232,19 @@ public class RecordService {
     public long countRecordNumByUserId(long userid) {
         return recordMapper.countRecordNumByUserId(userid, true);
     }
+    /**
+     * @description: 获取用户关注的用户的记录
+     * @param: userid
+	 * @param: pageNum
+	 * @param: pageSize
+     * @return: com.github.pagehelper.PageInfo<gaozhi.online.peoplety.record.entity.Record>
+     * @author LiFucheng
+     * @date: 2022/6/14 12:41
+     */
+    public PageInfo<Record> getAttentionUserRecordsByUserid(long userid, int pageNum, int pageSize) {
+        //子卷宗
+        PageHelper.startPage(pageNum, pageSize);
+        List<Record> records = recordMapper.getAttentionUserRecordsByUserid(userid);
+        return new PageInfo<>(records);
+    }
 }

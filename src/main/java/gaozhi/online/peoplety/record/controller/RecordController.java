@@ -118,8 +118,23 @@ public class RecordController {
      */
     @HeaderChecker
     @GetMapping("/get/user/records")
-    public PageInfo<Record> getUserRecordsByPage(@NotNull Long userid, @NotNull Integer pageNum, @NotNull Integer pageSize) {
+    public PageInfo<Record> getUserRecordsByUserid(@NotNull Long userid, @NotNull Integer pageNum, @NotNull Integer pageSize) {
         return recordService.getRecordsByUserid(userid, pageNum, pageSize);
+    }
+
+    /**
+     * @description: 根据用户id获取用户关注用户发布的内容    ---- 数据库分库后会产生跨库联表查询问题，拟采用表同步方法同步friend表
+     * @param: userid
+     * @param: pageNum
+     * @param: pageSize
+     * @return: com.github.pagehelper.PageInfo<gaozhi.online.peoplety.record.entity.Record>
+     * @author LiFucheng
+     * @date: 2022/6/13 20:33
+     */
+    @HeaderChecker
+    @GetMapping("/get/attention/records")
+    public PageInfo<Record> getAttentionUserRecordsByUserid(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @NotNull Integer pageNum, @NotNull Integer pageSize) {
+        return recordService.getAttentionUserRecordsByUserid(token.getUserid(), pageNum, pageSize);
     }
 
     /**
