@@ -1,15 +1,17 @@
 package gaozhi.online.peoplety.record.controller;
 
+import gaozhi.online.base.exception.BusinessRuntimeException;
+import gaozhi.online.base.exception.enums.ServerExceptionEnum;
 import gaozhi.online.base.interceptor.HeaderChecker;
 import gaozhi.online.peoplety.record.entity.Area;
 import gaozhi.online.peoplety.record.entity.IPInfo;
 import gaozhi.online.peoplety.record.entity.RecordType;
 import gaozhi.online.peoplety.record.service.AreaService;
 import gaozhi.online.peoplety.record.service.RecordTypeService;
+import gaozhi.online.peoplety.record.util.PatternUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -66,6 +68,9 @@ public class ConstantController {
      */
     @GetMapping("/get/ip_info")
     public IPInfo getIpInfo(@NotEmpty String ip) {
+        if(!PatternUtil.matchIPV4(ip)){
+            throw new BusinessRuntimeException(ServerExceptionEnum.PROPERTY_VALIDATE_ERROR,"此接口仅支持IPV4地址查询");
+        }
         return areaService.getIpInfo(ip);
     }
 }
