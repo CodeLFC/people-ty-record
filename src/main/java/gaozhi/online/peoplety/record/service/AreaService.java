@@ -41,7 +41,7 @@ public class AreaService {
 
     private final RestTemplate restTemplate = new RestTemplate();
     //有效期
-    private final long VALIDATE_TIME = 30 * 24 * 60 * 60 * 1000L;
+    private final long VALIDATE_TIME = 12 * 30 * 24 * 60 * 60 * 1000L;
 
     /**
      * @description: 获取ip信息
@@ -54,7 +54,7 @@ public class AreaService {
         IPInfoDB infoDB = ipInfoMapper.selectByIP(ip);
         //每一个月刷新一次缓存,暂时使用map代替数据库
         if (infoDB != null && System.currentTimeMillis() - infoDB.getTime() < VALIDATE_TIME) {
-            log.info("catch ip info:{}", infoDB);
+            //  log.info("catch ip info:{}", infoDB);
             return infoDB.getIPInfo();
         }
         //远程过程调用时间很长，如果为空需要提前插入
