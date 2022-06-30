@@ -30,7 +30,7 @@ public class TokenChecker implements HeaderPropertyChecker<Token> {
     private UserService userService;
 
     @Override
-    public Token check(String value, String url, String ip, boolean rpc,HttpServletRequest request, HttpServletResponse response) {
+    public Token check(String value, String url, String ip,HttpServletRequest request, HttpServletResponse response) {
         //log.info("url=" + url + " 检查用户token:" + value);
         Result result = userService.checkToken(value, url, ip);
         if (result.getCode() != Result.SUCCESSResultEnum.SUCCESS.code()) {

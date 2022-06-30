@@ -3,6 +3,7 @@ package gaozhi.online.peoplety.record.controller;
 import gaozhi.online.base.exception.BusinessRuntimeException;
 import gaozhi.online.base.exception.enums.ServerExceptionEnum;
 import gaozhi.online.base.interceptor.HeaderChecker;
+import gaozhi.online.base.interceptor.QPSChecker;
 import gaozhi.online.peoplety.record.entity.Area;
 import gaozhi.online.peoplety.record.entity.IPInfo;
 import gaozhi.online.peoplety.record.entity.RecordType;
@@ -66,6 +67,7 @@ public class ConstantController {
      * @param ip
      * @return
      */
+    @QPSChecker(max = 20)
     @GetMapping("/get/ip_info")
     public IPInfo getIpInfo(@NotEmpty String ip) {
         if(!PatternUtil.matchIPV4(ip)){
