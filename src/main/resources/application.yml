@@ -64,6 +64,7 @@ spring:
     multipart:
       max-file-size: 2MB
       max-request-size: 2MB
+
 server:
   port: 8102
   servlet:

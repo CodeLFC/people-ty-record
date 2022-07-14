@@ -1,6 +1,5 @@
 package gaozhi.online.peoplety.record.service;
 
-import com.google.gson.Gson;
 import gaozhi.online.base.interceptor.HeaderChecker;
 import gaozhi.online.base.result.Result;
 import gaozhi.online.peoplety.record.checker.TokenChecker;
