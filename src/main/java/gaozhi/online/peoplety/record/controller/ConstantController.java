@@ -6,7 +6,7 @@ import gaozhi.online.base.interceptor.HeaderChecker;
 import gaozhi.online.peoplety.entity.*;
 import gaozhi.online.peoplety.record.service.AreaService;
 import gaozhi.online.peoplety.record.service.RecordTypeService;
-import gaozhi.online.peoplety.record.util.PatternUtil;
+import gaozhi.online.peoplety.util.PatternUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
