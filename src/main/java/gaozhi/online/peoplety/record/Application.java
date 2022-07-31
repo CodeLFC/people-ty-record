@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -18,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 @EnableScheduling
 @EnableEurekaClient
 @SpringBootApplication
+@EnableFeignClients(basePackages = {"gaozhi.online.peoplety.record.service.feign"})
 @ComponentScan(basePackageClasses = {gaozhi.online.base.ScanClass.class, Application.class})
 public class Application {
     //负载均衡

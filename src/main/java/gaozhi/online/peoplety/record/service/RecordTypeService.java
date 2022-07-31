@@ -1,6 +1,6 @@
 package gaozhi.online.peoplety.record.service;
 
-import gaozhi.online.peoplety.record.entity.RecordType;
+import gaozhi.online.peoplety.entity.RecordType;
 import gaozhi.online.peoplety.record.mapper.RecordTypeMapper;
 import org.springframework.stereotype.Service;
 

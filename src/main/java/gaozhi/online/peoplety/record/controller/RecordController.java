@@ -7,9 +7,8 @@ import gaozhi.online.base.exception.SQLBusinessException;
 import gaozhi.online.base.exception.enums.SQLBusinessExceptionEnum;
 import gaozhi.online.base.interceptor.HeaderChecker;
 import gaozhi.online.base.result.Result;
-import gaozhi.online.peoplety.record.checker.TokenChecker;
-import gaozhi.online.peoplety.record.entity.*;
-import gaozhi.online.peoplety.record.entity.dto.RecordDTO;
+import gaozhi.online.peoplety.entity.*;
+import gaozhi.online.peoplety.entity.dto.RecordDTO;
 import gaozhi.online.peoplety.record.exception.UserException;
 import gaozhi.online.peoplety.record.exception.enums.UserExceptionEnum;
 import gaozhi.online.peoplety.record.service.FavoriteService;
@@ -50,7 +49,7 @@ public class RecordController {
      */
     @HeaderChecker
     @PostMapping("/post/record")
-    public Record publishRecord(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @RequestAttribute(TokenChecker.HEADER_ATTRIBUTE_IP) String ip, @RequestBody @NotNull Record record) {
+    public Record publishRecord(@RequestAttribute(HeaderChecker.accessToken) Token token, @RequestAttribute(HeaderChecker.rpcClientIp) String ip, @RequestBody @NotNull Record record) {
         record.setUserid(token.getUserid());
         record.setTime(System.currentTimeMillis());
         record.setIp(ip);
@@ -71,7 +70,7 @@ public class RecordController {
      */
     @HeaderChecker
     @GetMapping("/get/record")
-    public RecordDTO getRecordInfo(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @NotNull Long recordId) {
+    public RecordDTO getRecordInfo(@RequestAttribute(HeaderChecker.accessToken) Token token, @NotNull Long recordId) {
         return recordService.getRecordDTOById(recordId, token.getUserid());
     }
 
@@ -133,7 +132,7 @@ public class RecordController {
      */
     @HeaderChecker
     @GetMapping("/get/attention/records")
-    public PageInfo<Record> getAttentionUserRecordsByUserid(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @NotNull Integer pageNum, @NotNull Integer pageSize) {
+    public PageInfo<Record> getAttentionUserRecordsByUserid(@RequestAttribute(HeaderChecker.accessToken) Token token, @NotNull Integer pageNum, @NotNull Integer pageSize) {
         return recordService.getAttentionUserRecordsByUserid(token.getUserid(), pageNum, pageSize);
     }
 
@@ -164,7 +163,7 @@ public class RecordController {
      */
     @HeaderChecker
     @PostMapping("/post/comment")
-    public Comment commentRecord(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @RequestAttribute(TokenChecker.HEADER_ATTRIBUTE_IP) String ip, @RequestBody @NotNull Comment comment) {
+    public Comment commentRecord(@RequestAttribute(HeaderChecker.accessToken) Token token, @RequestAttribute(HeaderChecker.rpcClientIp) String ip, @RequestBody @NotNull Comment comment) {
         comment.setUserid(token.getUserid());
         comment.setTime(System.currentTimeMillis());
         comment.setIp(ip);
@@ -184,7 +183,7 @@ public class RecordController {
      */
     @HeaderChecker
     @DeleteMapping("/delete/record")
-    public Result updateRecordVisible(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @NotNull Long id) {
+    public Result updateRecordVisible(@RequestAttribute(HeaderChecker.accessToken) Token token, @NotNull Long id) {
         Record record = recordService.getVisibleRecordById(id);
         if (record == null) {
             throw new SQLBusinessException(SQLBusinessExceptionEnum.DELETE_ERROR, "卷宗已删除");
@@ -210,7 +209,7 @@ public class RecordController {
      */
     @HeaderChecker
     @DeleteMapping("/delete/comment")
-    public Result deleteComment(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @NotNull Long id) {
+    public Result deleteComment(@RequestAttribute(HeaderChecker.accessToken) Token token, @NotNull Long id) {
         Comment comment = recordService.getCommentById(id);
         if (comment == null) {
             throw new SQLBusinessException(SQLBusinessExceptionEnum.DELETE_ERROR, "评论已删除");
@@ -236,7 +235,7 @@ public class RecordController {
      */
     @HeaderChecker
     @GetMapping("/get/count")
-    public UserRecordCount getRecordCount(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @NotNull Long userid) {
+    public UserRecordCount getRecordCount(@RequestAttribute(HeaderChecker.accessToken) Token token, @NotNull Long userid) {
         UserRecordCount userRecordCount = new UserRecordCount();
         userRecordCount.setUserid(userid);
         long recordNum = recordService.countRecordNumByUserId(userid);

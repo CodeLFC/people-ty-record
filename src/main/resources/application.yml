@@ -83,6 +83,26 @@ http:
     charset: UTF-8
     enabled: true
     force: true
+# feign 配置
+feign:
+  sentinel:
+    enabled: true
+  hystrix:
+    enabled: false
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 60000
+  compression:
+    request:
+      enabled: false
+    response:
+      enabled: false
 
 ip138:
   dataType: jsonp   #txt|jsonp|xml

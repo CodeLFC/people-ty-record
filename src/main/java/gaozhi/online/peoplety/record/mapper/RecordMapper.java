@@ -1,6 +1,6 @@
 package gaozhi.online.peoplety.record.mapper;
 
-import gaozhi.online.peoplety.record.entity.Record;
+import gaozhi.online.peoplety.entity.Record;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

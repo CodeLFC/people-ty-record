@@ -2,13 +2,11 @@ package gaozhi.online.peoplety.record.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import gaozhi.online.peoplety.record.entity.Comment;
-import gaozhi.online.peoplety.record.entity.Record;
-import gaozhi.online.peoplety.record.entity.dto.RecordDTO;
+import gaozhi.online.peoplety.entity.*;
+import gaozhi.online.peoplety.entity.dto.RecordDTO;
 import gaozhi.online.peoplety.record.mapper.CommentMapper;
 import gaozhi.online.peoplety.record.mapper.RecordMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

@@ -1,8 +1,6 @@
 package gaozhi.online.peoplety.record.exception.enums;
 
-
 import gaozhi.online.base.result.Result;
-
 /**
  * @author LiFucheng
  * @version 1.0

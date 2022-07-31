@@ -2,7 +2,7 @@ package gaozhi.online.peoplety.record.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import gaozhi.online.peoplety.record.entity.Favorite;
+import gaozhi.online.peoplety.entity.Favorite;
 import gaozhi.online.peoplety.record.mapper.FavoriteItemMapper;
 import gaozhi.online.peoplety.record.mapper.FavoriteMapper;
 import org.springframework.stereotype.Service;

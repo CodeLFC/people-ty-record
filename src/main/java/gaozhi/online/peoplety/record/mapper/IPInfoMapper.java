@@ -1,6 +1,6 @@
 package gaozhi.online.peoplety.record.mapper;
 
-import gaozhi.online.peoplety.record.entity.IPInfoDB;
+import gaozhi.online.peoplety.entity.IPInfoDB;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;

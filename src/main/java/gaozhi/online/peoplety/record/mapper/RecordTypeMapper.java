@@ -1,6 +1,6 @@
 package gaozhi.online.peoplety.record.mapper;
 
-import gaozhi.online.peoplety.record.entity.RecordType;
+import gaozhi.online.peoplety.entity.RecordType;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 

@@ -5,13 +5,11 @@ import gaozhi.online.base.exception.SQLBusinessException;
 import gaozhi.online.base.exception.enums.SQLBusinessExceptionEnum;
 import gaozhi.online.base.interceptor.HeaderChecker;
 import gaozhi.online.base.result.Result;
-import gaozhi.online.peoplety.record.checker.TokenChecker;
-import gaozhi.online.peoplety.record.entity.Favorite;
-import gaozhi.online.peoplety.record.entity.Record;
-import gaozhi.online.peoplety.record.entity.Token;
+import gaozhi.online.peoplety.entity.*;
 import gaozhi.online.peoplety.record.exception.UserException;
 import gaozhi.online.peoplety.record.exception.enums.UserExceptionEnum;
 import gaozhi.online.peoplety.record.service.FavoriteService;
+import gaozhi.online.peoplety.record.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -33,6 +31,8 @@ public class FavoriteController {
 
     @Autowired
     private FavoriteService favoriteService;
+    @Autowired
+    private UserService userService;
 
     /**
      * @description: 根据用户id获取用户创建的收藏夹
@@ -45,7 +45,7 @@ public class FavoriteController {
      */
     @HeaderChecker
     @GetMapping("/get/user/favorites")
-    public PageInfo<Favorite> getUserFavorites(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @NotNull Long userid, @NotNull Integer pageNum, @NotNull Integer pageSize) {
+    public PageInfo<Favorite> getUserFavorites(@RequestAttribute(HeaderChecker.accessToken) Token token, @NotNull Long userid, @NotNull Integer pageNum, @NotNull Integer pageSize) {
         return favoriteService.getFavoriteByUserid(userid, token.getUserid() == userid, pageNum, pageSize);
     }
 
@@ -59,7 +59,7 @@ public class FavoriteController {
      */
     @HeaderChecker
     @PostMapping("/post/favorite")
-    public Favorite createFavorite(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @RequestBody Favorite favorite) {
+    public Favorite createFavorite(@RequestAttribute(HeaderChecker.accessToken) Token token, @RequestBody Favorite favorite) {
         favorite.setUserid(token.getUserid());
         favorite.setTime(System.currentTimeMillis());
         int res = favoriteService.createFavorite(favorite);
@@ -79,7 +79,7 @@ public class FavoriteController {
      */
     @HeaderChecker
     @DeleteMapping("/delete/favorite")
-    public Result deleteFavorite(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @NotNull Long id) {
+    public Result deleteFavorite(@RequestAttribute(HeaderChecker.accessToken) Token token, @NotNull Long id) {
         Favorite favorite = favoriteService.getFavoriteById(id);
         if (favorite == null) {
             throw new SQLBusinessException(SQLBusinessExceptionEnum.SELECT_ERROR, "收藏夹不存在");
@@ -105,7 +105,7 @@ public class FavoriteController {
      */
     @HeaderChecker
     @PutMapping("/put/favorite")
-    public Favorite updateFavorite(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @RequestBody Favorite favorite) {
+    public Favorite updateFavorite(@RequestAttribute(HeaderChecker.accessToken) Token token, @RequestBody Favorite favorite) {
         Favorite favoriteDB = favoriteService.getFavoriteById(favorite.getId());
         if (favoriteDB == null) {
             throw new SQLBusinessException(SQLBusinessExceptionEnum.SELECT_ERROR, "收藏夹不存在");
@@ -132,7 +132,7 @@ public class FavoriteController {
      */
     @HeaderChecker
     @PostMapping("/post/favorite/item")
-    public Favorite.Item favoriteRecord(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @RequestBody Favorite.Item item) {
+    public Favorite.Item favoriteRecord(@RequestAttribute(HeaderChecker.accessToken) Token token, @RequestBody Favorite.Item item) {
         Favorite favorite = favoriteService.getFavoriteById(item.getFavoriteId());
         if (favorite == null || favorite.getUserid() != token.getUserid()) {
             throw new SQLBusinessException(SQLBusinessExceptionEnum.SELECT_ERROR, "收藏夹不存在");
@@ -159,7 +159,7 @@ public class FavoriteController {
      */
     @HeaderChecker
     @DeleteMapping("/delete/favorite/item")
-    public Result deleteFavoriteItem(@RequestAttribute(TokenChecker.HEADER_CHECKER_NAME) Token token, @NotNull Long id) {
+    public Result deleteFavoriteItem(@RequestAttribute(HeaderChecker.accessToken) Token token, @NotNull Long id) {
         Favorite.Item item = favoriteService.getFavoriteItemById(id);
         if (item == null) {
             throw new SQLBusinessException(SQLBusinessExceptionEnum.SELECT_ERROR, "收藏条目不存在");
