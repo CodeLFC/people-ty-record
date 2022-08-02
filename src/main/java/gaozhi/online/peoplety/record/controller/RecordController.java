@@ -9,6 +9,7 @@ import gaozhi.online.base.interceptor.HeaderChecker;
 import gaozhi.online.base.result.Result;
 import gaozhi.online.peoplety.entity.*;
 import gaozhi.online.peoplety.entity.dto.RecordDTO;
+import gaozhi.online.peoplety.entity.vo.UserRecordCountVO;
 import gaozhi.online.peoplety.record.exception.UserException;
 import gaozhi.online.peoplety.record.exception.enums.UserExceptionEnum;
 import gaozhi.online.peoplety.record.service.FavoriteService;
@@ -235,8 +236,8 @@ public class RecordController {
      */
     @HeaderChecker
     @GetMapping("/get/count")
-    public UserRecordCount getRecordCount(@RequestAttribute(HeaderChecker.accessToken) Token token, @NotNull Long userid) {
-        UserRecordCount userRecordCount = new UserRecordCount();
+    public UserRecordCountVO getRecordCount(@RequestAttribute(HeaderChecker.accessToken) Token token, @NotNull Long userid) {
+        UserRecordCountVO userRecordCount = new UserRecordCountVO();
         userRecordCount.setUserid(userid);
         long recordNum = recordService.countRecordNumByUserId(userid);
         userRecordCount.setRecordNum(recordNum);

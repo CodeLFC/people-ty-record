@@ -4,6 +4,7 @@ import gaozhi.online.base.exception.BusinessRuntimeException;
 import gaozhi.online.base.exception.enums.ServerExceptionEnum;
 import gaozhi.online.base.interceptor.HeaderChecker;
 import gaozhi.online.peoplety.entity.*;
+import gaozhi.online.peoplety.entity.dto.IPInfoDTO;
 import gaozhi.online.peoplety.record.service.AreaService;
 import gaozhi.online.peoplety.record.service.RecordTypeService;
 import gaozhi.online.peoplety.util.PatternUtil;
@@ -30,6 +31,7 @@ public class ConstantController {
     private AreaService areaService;
     @Autowired
     private RecordTypeService recordTypeService;
+
     /**
      * @description: 获取街道列表，此信息不轻易改变，应该每隔一天获取一次
      * @param:
@@ -65,9 +67,9 @@ public class ConstantController {
      * @return
      */
     @GetMapping("/get/ip_info")
-    public IPInfo getIpInfo(@NotEmpty String ip) {
-        if(!PatternUtil.matchIPV4(ip)){
-            throw new BusinessRuntimeException(ServerExceptionEnum.PROPERTY_VALIDATE_ERROR,"此接口仅支持IPV4地址查询");
+    public IPInfoDTO getIpInfo(@NotEmpty String ip) {
+        if (!PatternUtil.matchIPV4(ip)) {
+            throw new BusinessRuntimeException(ServerExceptionEnum.PROPERTY_VALIDATE_ERROR, "此接口仅支持IPV4地址查询");
         }
         return areaService.getIpInfo(ip);
     }
