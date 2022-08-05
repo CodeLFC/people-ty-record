@@ -20,7 +20,7 @@ import org.springframework.web.client.RestTemplate;
 @EnableEurekaClient
 @SpringBootApplication
 @EnableFeignClients(basePackages = {"gaozhi.online.peoplety.record.service.feign"})
-@ComponentScan(basePackageClasses = {gaozhi.online.base.ScanClass.class, Application.class})
+@ComponentScan(basePackageClasses = {gaozhi.online.base.ScanClass.class,gaozhi.online.peoplety.ScanClass.class, Application.class})
 public class Application {
     //负载均衡
     @Bean

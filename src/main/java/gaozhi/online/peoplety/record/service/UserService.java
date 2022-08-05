@@ -22,12 +22,18 @@ public class UserService {
     @Autowired
     private UserFeignClient userFeignClient;
 
+//    public Result checkToken(String token, String url, String clientIp) {
+//        //创建请求头
+//        Map<String, String> httpHeaders = new HashMap<>();
+//        httpHeaders.put(HeaderChecker.accessToken, token);
+//        httpHeaders.put(HeaderChecker.rpcURLKey, url);
+//        httpHeaders.put(HeaderChecker.rpcClientIp, clientIp);
+//        return userFeignClient.checkAuth(httpHeaders);
+//    }
+
     public Result checkToken(String token, String url, String clientIp) {
         //创建请求头
-        Map<String, String> httpHeaders = new HashMap<>();
-        httpHeaders.put(HeaderChecker.accessToken, token);
-        httpHeaders.put(HeaderChecker.rpcURLKey, url);
-        httpHeaders.put(HeaderChecker.rpcClientIp, clientIp);
-        return userFeignClient.checkAuth(httpHeaders);
+
+        return userFeignClient.checkAuth(token, url, clientIp);
     }
 }
