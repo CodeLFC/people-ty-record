@@ -1,14 +1,11 @@
 package gaozhi.online.peoplety.record.service;
 
-import gaozhi.online.base.interceptor.HeaderChecker;
 import gaozhi.online.base.result.Result;
-import gaozhi.online.peoplety.record.service.feign.UserFeignClient;
+import gaozhi.online.peoplety.feign.UserFeignClient;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.annotation.Resource;
 
 /**
  * @author LiFucheng
@@ -19,7 +16,7 @@ import java.util.Map;
 @Service
 @Slf4j
 public class UserService {
-    @Autowired
+    @Resource
     private UserFeignClient userFeignClient;
 
 //    public Result checkToken(String token, String url, String clientIp) {

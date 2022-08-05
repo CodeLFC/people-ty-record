@@ -17,6 +17,4 @@ public class IP138Config {
     private String dataType;
     @Value("${ip138.token}")
     private String token;
-    @Value("${ip138.url}")
-    private String url;
 }

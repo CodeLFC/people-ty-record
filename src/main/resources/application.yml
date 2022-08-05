@@ -107,4 +107,3 @@ feign:
 ip138:
   dataType: jsonp   #txt|jsonp|xml
   token: b14c985622e4a9e3661d37a605f55d93
-  url: https://api.ip138.com/ip/?token={token}&datatype={datatype}&ip={ip}

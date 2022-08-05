@@ -8,10 +8,10 @@ import gaozhi.online.peoplety.record.config.IP138Config;
 import gaozhi.online.peoplety.entity.*;
 import gaozhi.online.peoplety.record.mapper.AreaMapper;
 import gaozhi.online.peoplety.record.mapper.IPInfoMapper;
+import gaozhi.online.peoplety.record.service.feign.IP138FeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -38,10 +38,14 @@ public class AreaService {
     private IP138Config ip138Config;
     @Resource
     private IPInfoMapper ipInfoMapper;
-
-    private final RestTemplate restTemplate = new RestTemplate();
-    //有效期
-    private final long VALIDATE_TIME = 12 * 30 * 24 * 60 * 60 * 1000L;
+    @Resource
+    private IP138FeignClient ip138FeignClient;
+    /**
+     * @description: 有效期
+     * @author http://gaozhi.online
+     * @date: 2022/8/5 15:23
+     */
+    private final long VALIDATE_TIME = 24 * 30 * 24 * 60 * 60 * 1000L;
 
     private final IPInfoBeanCopyFactory.DO2DTO ipInfoDO2DTO = new IPInfoBeanCopyFactory.DO2DTO();
     private final IPInfoBeanCopyFactory.DTO2DO ipInfoDTO2DO = new IPInfoBeanCopyFactory.DTO2DO();
@@ -56,8 +60,7 @@ public class AreaService {
     public IPInfoDTO getIpInfo(String ip) {
         IPInfo infoDB = ipInfoMapper.selectByIP(ip);
         //每一个月刷新一次缓存,暂时使用map代替数据库
-        if (infoDB != null && System.currentTimeMillis() - infoDB.getTime() < VALIDATE_TIME) {
-            //  log.info("catch ip info:{}", infoDB);
+        if (infoDB != null && System.currentTimeMillis() - infoDB.getTime() < VALIDATE_TIME && infoDB.getData() != null) {
             return ipInfoDO2DTO.copy(infoDB, IPInfoDTO.class);
         }
         //远程过程调用时间很长，如果为空需要提前插入
@@ -73,7 +76,7 @@ public class AreaService {
         params.put("ip", ip);
 
         //远程调用,
-        IPInfoDTO info = restTemplate.getForObject(ip138Config.getUrl(), IPInfoDTO.class, params);
+        IPInfoDTO info = ip138FeignClient.getIPInfo(ip138Config.getToken(), ip138Config.getDataType(), ip);
         if (info == null || !"ok".equals(info.getRet())) {
             throw new BusinessRuntimeException(ServerExceptionEnum.GENERAL_ERROR, "ip138远程服务调用异常：" + info);
         }

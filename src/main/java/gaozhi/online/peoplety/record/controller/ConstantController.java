@@ -66,6 +66,7 @@ public class ConstantController {
      * @param ip
      * @return
      */
+    @HeaderChecker
     @GetMapping("/get/ip_info")
     public IPInfoDTO getIpInfo(@NotEmpty String ip) {
         if (!PatternUtil.matchIPV4(ip)) {
