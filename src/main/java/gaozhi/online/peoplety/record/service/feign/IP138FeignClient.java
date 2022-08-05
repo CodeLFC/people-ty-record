@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * @author http://gaozhi.online
  * @version 1.0
- * @description: TODO ip138服务
+ * @description: TODO ip138服务  访问异常
  * @date 2022/8/5 15:14
  */
-@FeignClient(value = "ip138",url = "https://api.ip138.com", configuration = FeignConfiguration.class)
+@Deprecated
+@FeignClient(value = "ip138FeignClient",url = "http://api.ip138.com", configuration = FeignConfiguration.class)
 public interface IP138FeignClient {
     @GetMapping("/ip/")
     IPInfoDTO getIPInfo(@RequestParam("token") String token, @RequestParam("datatype") String datatype, @RequestParam("ip") String ip);

@@ -12,6 +12,8 @@ import gaozhi.online.peoplety.record.service.feign.IP138FeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -40,6 +42,8 @@ public class AreaService {
     private IPInfoMapper ipInfoMapper;
     @Resource
     private IP138FeignClient ip138FeignClient;
+
+    private final RestTemplate restTemplate = new RestTemplate();
     /**
      * @description: 有效期
      * @author http://gaozhi.online
@@ -57,33 +61,35 @@ public class AreaService {
      * @author LiFucheng
      * @date: 2022/5/30 16:07
      */
+    @Transactional
     public IPInfoDTO getIpInfo(String ip) {
-        IPInfo infoDB = ipInfoMapper.selectByIP(ip);
+        IPInfo info = ipInfoMapper.selectByIP(ip);
         //每一个月刷新一次缓存,暂时使用map代替数据库
-        if (infoDB != null && System.currentTimeMillis() - infoDB.getTime() < VALIDATE_TIME && infoDB.getData() != null) {
-            return ipInfoDO2DTO.copy(infoDB, IPInfoDTO.class);
+        if (info != null && System.currentTimeMillis() - info.getTime() < VALIDATE_TIME && info.getData() != null) {
+            return ipInfoDO2DTO.copy(info, IPInfoDTO.class);
         }
         //远程过程调用时间很长，如果为空需要提前插入
-        if (infoDB == null) {
-            infoDB = new IPInfo();
-            infoDB.setIp(ip);
-            ipInfoMapper.insert(infoDB);
+        if (info == null) {
+            info = new IPInfo();
+            info.setIp(ip);
+            ipInfoMapper.insert(info);
         }
 
         Map<String, String> params = new HashMap<>();
         params.put("token", ip138Config.getToken());
         params.put("datatype", ip138Config.getDataType());
         params.put("ip", ip);
-
+        IPInfoDTO infoDTO = restTemplate.getForObject("https://api.ip138.com/ip/?ip={ip}&datatype={datatype}&token={token}", IPInfoDTO.class, params);
         //远程调用,
-        IPInfoDTO info = ip138FeignClient.getIPInfo(ip138Config.getToken(), ip138Config.getDataType(), ip);
-        if (info == null || !"ok".equals(info.getRet())) {
-            throw new BusinessRuntimeException(ServerExceptionEnum.GENERAL_ERROR, "ip138远程服务调用异常：" + info);
+        // IPInfoDTO infoDTO = ip138FeignClient.getIPInfo(ip138Config.getToken(), ip138Config.getDataType(), ip);
+        if (infoDTO == null || !"ok".equals(infoDTO.getRet())) {
+            throw new BusinessRuntimeException(ServerExceptionEnum.GENERAL_ERROR, "ip138远程服务调用异常：" + infoDTO);
         }
         //更新信息
-        infoDB.setTime(System.currentTimeMillis());
-        ipInfoDTO2DO.copy(info, infoDB);
-        ipInfoMapper.updateIPInfo(infoDB);
-        return info;
+        info.setTime(System.currentTimeMillis());
+        ipInfoDTO2DO.copy(infoDTO, info);
+        ipInfoMapper.updateIPInfo(info);
+        log.info("远程调用更新IP地址{}", info);
+        return infoDTO;
     }
 }
