@@ -184,8 +184,8 @@ public class RecordService {
             Record parent = recordMapper.selectById(record.getParentId());
             recordDTO.setParent(parent);
         }
-        //子卷宗数量
-        recordDTO.setChildNum(recordMapper.selectChildCountById(record.getId(), true));
+        //相关卷宗数量
+        recordDTO.setChildNum(recordMapper.selectChildCountById(record.getId(), true)+record.getParentId()!=0?1:0);
         //评论数量
         recordDTO.setCommentNum(commentMapper.selectCommentCountByRecordId(record.getId()));
         //收藏数量

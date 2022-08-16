@@ -127,7 +127,7 @@ public interface RecordMapper {
     @Select("select " +
             "record.id,parent_id parentId,record.userid,area_id areaId,record_type_id recordTypeId,enable,title,description,content,imgs,url,record.time,ip,top " +
             "from record left join friend on friend.friend_id = record.userid " +
-            "where friend.userid  = #{userid} and record.enable = true " +
+            "where (record.userid=#{userid} or friend.userid  = #{userid}) and record.enable = true " +
             "order by record.id desc")
     List<Record> getAttentionUserRecordsByUserid(long userid);
 }
