@@ -53,7 +53,7 @@ public interface FavoriteMapper {
      */
     @Select("select id,userid,name,description,time,visible " +
             "from favorite " +
-            "where userid = #{userid}")
+            "where userid = #{userid} order by id desc")
     List<Favorite> getFavoritesByUserId(long userid);
 
     /**
@@ -65,7 +65,7 @@ public interface FavoriteMapper {
      */
     @Select("select id,userid,name,description,time,visible " +
             "from favorite " +
-            "where userid = #{userid} and visible = true")
+            "where userid = #{userid} and visible = true  order by id desc")
     List<Favorite> getVisibleFavoritesByUserId(long userid);
 
     @Select("select id,userid,name,description,time,visible " +
