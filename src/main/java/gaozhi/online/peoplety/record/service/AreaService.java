@@ -8,7 +8,6 @@ import gaozhi.online.peoplety.record.config.IP138Config;
 import gaozhi.online.peoplety.entity.*;
 import gaozhi.online.peoplety.record.mapper.AreaMapper;
 import gaozhi.online.peoplety.record.mapper.IPInfoMapper;
-import gaozhi.online.peoplety.record.service.feign.IP138FeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,8 +39,6 @@ public class AreaService {
     private IP138Config ip138Config;
     @Resource
     private IPInfoMapper ipInfoMapper;
-    @Resource
-    private IP138FeignClient ip138FeignClient;
 
     private final RestTemplate restTemplate = new RestTemplate();
     /**
